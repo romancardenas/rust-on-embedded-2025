@@ -1,0 +1,169 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug (QEMU)",
+            // Example debug configuration
+            "type": "cortex-debug",
+            "cwd": "${workspaceRoot}",
+            "preLaunchTask": "build example", // Defined in tasks.json
+            "executable": "${workspaceRoot}/target/riscv32imc-unknown-none-elf/debug/examples/${input:example}",
+            "request": "launch",
+            "runToEntryPoint": "main",
+            // QEMU settings
+            "servertype": "qemu",
+            "serverpath": "qemu-system-riscv32", // path to QEMU for RISC-V 32-bit
+            "cpu": "rv32",
+            "machine": "sifive_e,revb=true",
+            "svdFile": "${workspaceRoot}/e310x.svd",
+            // GDB settings
+            "toolchainPrefix": "riscv64-unknown-elf",
+            "gdbPath": "riscv64-unknown-elf-gdb", // path to GDB for RISC-V
+        },
+        {
+            "name": "Debug (QEMU, async)",
+            // Example debug configuration
+            "type": "cortex-debug",
+            "cwd": "${workspaceRoot}",
+            "preLaunchTask": "build async example", // Defined in tasks.json
+            "executable": "${workspaceRoot}/target/riscv32imc-unknown-none-elf/debug/examples/${input:async-example}",
+            "request": "launch",
+            "runToEntryPoint": "main",
+            // QEMU settings
+            "servertype": "qemu",
+            "serverpath": "qemu-system-riscv32", // path to QEMU for RISC-V 32-bit
+            "cpu": "rv32",
+            "machine": "sifive_e,revb=true",
+            "svdFile": "${workspaceRoot}/e310x.svd",
+            // GDB settings
+            "toolchainPrefix": "riscv64-unknown-elf",
+            "gdbPath": "riscv64-unknown-elf-gdb", // path to GDB for RISC-V
+        },
+        {
+            "name": "Debug (QTest)",
+            // Example debug configuration
+            "type": "cortex-debug",
+            "cwd": "${workspaceRoot}",
+            "preLaunchTask": "build example", // Defined in tasks.json
+            "executable": "${workspaceRoot}/target/riscv32imc-unknown-none-elf/debug/examples/${input:example}",
+            "request": "launch",
+            "runToEntryPoint": "main",
+            // QEMU settings
+            "servertype": "qemu",
+            "serverpath": "qemu-system-riscv32", // path to QEMU for RISC-V 32-bit
+            "serverArgs": [
+                "-qtest",
+                "tcp:localhost:3333",
+            ],
+            "cpu": "rv32",
+            "machine": "sifive_e,revb=true",
+            "svdFile": "${workspaceRoot}/e310x.svd",
+            // GDB settings
+            "toolchainPrefix": "riscv64-unknown-elf",
+            "gdbPath": "riscv64-unknown-elf-gdb", // path to GDB for RISC-V
+        },
+
+        {
+            "name": "Debug (QTest async)",
+            // Example debug configuration
+            "type": "cortex-debug",
+            "cwd": "${workspaceRoot}",
+            "preLaunchTask": "build async example", // Defined in tasks.json
+            "executable": "${workspaceRoot}/target/riscv32imc-unknown-none-elf/debug/examples/${input:async-example}",
+            "request": "launch",
+            "runToEntryPoint": "main",
+            // QEMU settings
+            "servertype": "qemu",
+            "serverpath": "qemu-system-riscv32", // path to QEMU for RISC-V 32-bit
+            "serverArgs": [
+                "-qtest",
+                "tcp:localhost:3333",
+            ],
+            "cpu": "rv32",
+            "machine": "sifive_e,revb=true",
+            "svdFile": "${workspaceRoot}/e310x.svd",
+            // GDB settings
+            "toolchainPrefix": "riscv64-unknown-elf",
+            "gdbPath": "riscv64-unknown-elf-gdb", // path to GDB for RISC-V
+        },
+        {
+            "name": "Debug (OpenOCD)",
+            // Example debug configuration
+            "type": "cortex-debug",
+            "cwd": "${workspaceRoot}",
+            "preLaunchTask": "build example", // Defined in tasks.json
+            "executable": "${workspaceRoot}/target/riscv32imc-unknown-none-elf/debug/examples/${input:example}",
+            "request": "launch",
+            // OpenOCD settings
+            "servertype": "openocd",
+            // "serverpath": "openocd", // OpenOCD path if not in PATH
+            "configFiles": [
+                "board/sifive-hifive1-revb.cfg"
+            ],
+            // GDB settings
+            "toolchainPrefix": "riscv64-unknown-elf",
+            "gdbPath": "riscv64-unknown-elf-gdb", // path to GDB for RISC-V
+            "postLaunchCommands": [
+                "monitor arm semihosting enable",
+            ],
+            "svdFile": "${workspaceRoot}/e310x.svd",
+        },
+        {
+            "name": "Debug (OpenOCD async)",
+            // Example debug configuration
+            "type": "cortex-debug",
+            "cwd": "${workspaceRoot}",
+            "preLaunchTask": "build async example", // Defined in tasks.json
+            "executable": "${workspaceRoot}/target/riscv32imc-unknown-none-elf/debug/examples/${input:async-example}",
+            "request": "launch",
+            // OpenOCD settings
+            "servertype": "openocd",
+            // "serverpath": "openocd", // OpenOCD path if not in PATH
+            "configFiles": [
+                "board/sifive-hifive1-revb.cfg"
+            ],
+            // GDB settings
+            "toolchainPrefix": "riscv64-unknown-elf",
+            "gdbPath": "riscv64-unknown-elf-gdb", // path to GDB for RISC-V
+            "postLaunchCommands": [
+                "monitor arm semihosting enable",
+            ],
+            "svdFile": "${workspaceRoot}/e310x.svd",
+        },
+    ],
+    "inputs": [
+        {
+            "id": "example",
+            "type": "command",
+            "command": "extension.commandvariable.pickStringRemember",
+            "args": {
+                "key": "lastExample",
+                "description": "Enter the example:",
+                "default": "0_hello",
+                "options": [
+                    "0_hello",
+                    "1_blink_block",
+                    "2_blink_interrupt",
+                    "4_button_block",
+                    "5_button_interrupt",
+                ]
+            }
+        },
+        {
+            "id": "async-example",
+            "type": "command",
+            "command": "extension.commandvariable.pickStringRemember",
+            "args": {
+                "key": "lastAsyncExample",
+                "description": "Enter the example:",
+                "default": "0_hello",
+                "options": [
+                    "0_hello",
+                    "3_blink_async",
+                    "6_button_async",
+                    "7_button_rtic",
+                ]
+            }
+        }
+    ]
+}

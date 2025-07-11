@@ -1,0 +1,19 @@
+[package]
+name = "rust-on-embedded-2025"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+critical-section = { version = "1.2" }
+panic-halt = "1.0.0"
+embassy-executor = { version = "0.7.0", features = ["arch-riscv32", "executor-thread"], optional = true }
+
+riscv = { git = "https://github.com/rust-embedded/riscv.git", branch = "post-init" }
+riscv-rt = { git = "https://github.com/rust-embedded/riscv.git", branch = "post-init" }
+hifive1 = { git = "https://github.com/dmunizu/e310x.git", branch = "rvp-rework-conference", features = ["board-redv"] }
+rtic = { git = "https://github.com/romancardenas/rtic.git", features = ["riscv-clint-backend"] }
+
+[features]
+# default = ["async"] # Uncomment this to run async examples
+v-trap = ["hifive1/v-trap"]
+async = ["hifive1/async", "embassy-executor"]
