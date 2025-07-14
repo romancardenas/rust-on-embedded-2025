@@ -1,13 +1,13 @@
-//! Demonstration on how to configure the GPIO9 interrupt on HiFive boards.
+//! Block example that turns on an LED when a button is pressed.
 
 #![no_main]
 #![no_std]
 
 extern crate panic_halt;
 use hifive1::{
-    Led, clock,
-    hal::{DeviceResources, prelude::*},
-    pin, sprintln, stdout,
+    clock,
+    hal::{prelude::*, DeviceResources},
+    sprintln, stdout, Led,
 };
 
 const STEP_MS: u32 = 1000; // Blinking step in milliseconds
@@ -19,22 +19,19 @@ fn main() -> ! {
     let peripherals = device_resources.peripherals;
     let pins = device_resources.pins;
 
-    // Configure clocks
+    // Configure clocks and UART for stdout
     let clocks = clock::configure(peripherals.PRCI, peripherals.AONCLK, 320.mhz().into());
-
-    // Configure UART for stdout
     stdout::configure(
         peripherals.UART0,
-        pin!(pins, uart0_tx),
-        pin!(pins, uart0_rx),
+        pins.pin17,
+        pins.pin16,
         115_200.bps(),
         clocks,
     );
 
     // Configure GPIOs
-    sprintln!("Configuring GPIOs...");
     let mut button = pins.pin9.into_pull_up_input();
-    let mut led = pin!(pins, led_blue).into_inverted_output();
+    let mut led = pins.pin5.into_inverted_output();
 
     // Get the MTIMER peripheral from CLINT. This is used for blocking delays.
     let mut mtimer = core_peripherals.clint.mtimer();

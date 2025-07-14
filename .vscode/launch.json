@@ -21,7 +21,7 @@
             "gdbPath": "riscv64-unknown-elf-gdb", // path to GDB for RISC-V
         },
         {
-            "name": "Debug (QEMU, async)",
+            "name": "Debug (QEMU async)",
             // Example debug configuration
             "type": "cortex-debug",
             "cwd": "${workspaceRoot}",
@@ -162,6 +162,7 @@
                     "3_blink_async",
                     "6_button_async",
                     "7_button_rtic",
+                    "8_button_rtic_shared",
                 ]
             }
         }

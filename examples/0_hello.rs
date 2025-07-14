@@ -25,9 +25,7 @@ fn main() -> ! {
     let pins = device_resources.pins;
 
     // Usually, before the main loop, we configure the system clocks...
-    let prci = peripherals.PRCI;
-    let aonclk = peripherals.AONCLK;
-    let clocks = clock::configure(prci, aonclk, 320.mhz().into());
+    let clocks = clock::configure(peripherals.PRCI, peripherals.AONCLK, 320.mhz().into());
     // ... and configure UART for stdout
     let uart0 = peripherals.UART0;
     let uart0_tx = pin!(pins, uart0_tx);

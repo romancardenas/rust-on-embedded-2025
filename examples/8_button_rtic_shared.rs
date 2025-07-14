@@ -28,7 +28,9 @@ mod app {
     pub type BlueLed = Pin5<Output<Regular<Invert>>>;
 
     #[shared]
-    struct Shared {}
+    struct Shared {
+        pressed: bool,
+    }
 
     #[local]
     struct Local {
@@ -78,7 +80,7 @@ mod app {
         };
         button_task::spawn().unwrap(); // Start button task
 
-        (Shared {}, Local { button, delay, led })
+        (Shared { pressed: false }, Local { button, delay, led })
     }
 
     #[idle]
@@ -89,26 +91,39 @@ mod app {
         }
     }
 
-    #[task(local = [button, delay, led], priority = 1)]
-    async fn button_task(cx: button_task::Context) {
+    #[task(shared = [pressed], local = [button, delay], priority = 1)]
+    async fn button_task(mut cx: button_task::Context) {
         let button = cx.local.button;
         let delay = cx.local.delay;
-        let led = cx.local.led;
 
         loop {
             button.wait_for_any_edge().await.unwrap(); // async wait for button state change
             sprintln!("    [button_task]: Button state changed");
             delay.delay_ms(100).await; // async debounce delay
 
-            if button.is_low().unwrap() {
-                led.on();
-                sprintln!("    [button_task]: Button pressed, LED is ON");
-            } else {
-                led.off();
-                sprintln!("    [button_task]: Button released, LED is OFF");
-            }
-            sprintln!("    [button_task]: iteration finished");
-            sprintln!();
+            let pressed = button.is_low().unwrap();
+            sprintln!("    [button_task]: Button pressed: {}", pressed);
+
+            // Update shared state and spawn led_task
+            cx.shared.pressed.lock(|shared_pressed| {
+                *shared_pressed = pressed;
+            });
+            led_task::spawn().unwrap();
+
+            sprintln!("    [button_task]: iteration finished")
+        }
+    }
+
+    #[task(shared = [pressed], local = [led], priority = 2)]
+    async fn led_task(mut cx: led_task::Context) {
+        let led = cx.local.led;
+        let pressed = cx.shared.pressed.lock(|shared_pressed| *shared_pressed);
+        if pressed {
+            led.on();
+            sprintln!("        [led_task]: LED is ON");
+        } else {
+            led.off();
+            sprintln!("        [led_task]: LED is OFF");
         }
     }
 }

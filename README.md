@@ -108,7 +108,7 @@ We use it to ease the process of running different examples.
 ## Available examples
 
 Check the `examples/` directory.
-You will find 8 usable examples that illustrate how to program a RISC-V embedded devices:
+You will find 9 usable examples that illustrate how to program a RISC-V embedded devices:
 
 - `0_hello.rs`: Prints "Hello, World!" through the UART.
 - `1_blink_block.rs`: Makes an LED blink using blocking delay.
@@ -118,6 +118,7 @@ You will find 8 usable examples that illustrate how to program a RISC-V embedded
 - `5_button_interrupt.rs`: Interrupt-driven version of the button example.
 - `6_button_async.rs`: Asynchronous version of the button example.
 - `7_button_rtic.rs`: A more sophisticated version of the button example built on top of the [RTIC](https://rtic.rs/2/book/en/) Real-Time Operating System (RTOS).
+- `8_button_rtic_shared.rs`: Similar to `7_button_rtic.rs`, but using more tasks that communicate over shared variables.
 
 ## Configuring Cargo for your target
 
@@ -196,13 +197,13 @@ To run an example, go to the `Run and Debug` tab in the left bar.
 You will see that there are six Debug configurations:
 
 - `Debug (QEMU)`: use this configuration if you want to run and debug blocking and interrupt-driven examples using the QEMU emulator.
-- `Debug (QEMU, async)`: use this configuration if you want to run and debug asynchronous examples using the QEMU emulator.
+- `Debug (QEMU async)`: use this configuration if you want to run and debug asynchronous examples using the QEMU emulator.
 - `Debug (QTest)`: this configuration is similar to `Debug (QEMU)`, however, it connects to a TCP socket at port 3333 to receive QTest commands.
-- `Debug (QTest, async)`: this configuration is similar to `Debug (QEMU, async)`, however, it connects to a TCP socket at port 3333 to receive QTest commands.
+- `Debug (QTest async)`: this configuration is similar to `Debug (QEMU async)`, however, it connects to a TCP socket at port 3333 to receive QTest commands.
 - `Debug (OpenOCD)`: use this configuration if you want to run and debug blocking and interrupt-driven examples on a physical board.
-- `Debug (OpenOCD, async)`: use this configuration if you want to run and debug asynchronous examples on a physical board.
+- `Debug (OpenOCD async)`: use this configuration if you want to run and debug asynchronous examples on a physical board.
 
-In this talk, we will mainly use the `Debug (QEMU)`, `Debug (QTest)` and `Debug (QTest, async)` configurations to emulate the examples.
+In this talk, we will mainly use the `Debug (QEMU)`, `Debug (QTest)` and `Debug (QTest async)` configurations to emulate the examples.
 QTest configurations will allow us to emulate external stimuli from the button.
 Whenever we want to emulate that the button has been pressed, we will send the following QTest command through the TCP socket:
 
